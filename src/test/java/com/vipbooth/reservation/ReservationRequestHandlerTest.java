@@ -23,7 +23,7 @@ public class ReservationRequestHandlerTest
 		input.setEmail( "sdadf@sdaf.com" );
 		input.setPhone( "123-456-7899" );
 		input.setEventDate( "08-08-2018" );
-		input.setMessage( "asflaksfakj" );
+		input.setMessage( "From Unit Test" );
 	}
 
 	private Context createContext()

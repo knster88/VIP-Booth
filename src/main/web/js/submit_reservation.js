@@ -26,6 +26,7 @@ function submitReservation()
 		( 
 			(result) => 
 			{
+				Spinner.hide();
 				alert( "We are unable to process your request. Please try again later or contact us directly.  Thank you!" )
 			}
 		);

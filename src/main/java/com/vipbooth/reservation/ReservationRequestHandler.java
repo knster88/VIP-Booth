@@ -1,5 +1,7 @@
 package com.vipbooth.reservation;
 
+import org.joda.time.DateTime;
+
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -11,13 +13,14 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.amazonaws.services.simpleemail.model.SendEmailResult;
 
 public class ReservationRequestHandler implements RequestHandler<Reservation, String>
 {
 	private static LambdaLogger LOGGER;
-	private static final String FROM = "reservation@thevipbooth.com";
+	private static final String FROM = "vipbooth2013@gmail.com";
 	private static final String[] TO = new String[]
-	{ "reservation@thevipbooth.com", "vipbooth2013@gmail.com" };
+	{ "vipbooth2013@gmail.com" };
 	private static final String SUBJECT = "VIP Booth Reservation";
 
 	@Override
@@ -39,17 +42,18 @@ public class ReservationRequestHandler implements RequestHandler<Reservation, St
 			AmazonSimpleEmailService emailService = AmazonSimpleEmailServiceClientBuilder
 					.standard().withRegion( Regions.US_EAST_1 ).build();
 
-			emailService.sendEmail( request );
+			SendEmailResult sentResult = emailService.sendEmail( request );
 
-			LOGGER.log( "Email sent!" );
-			return "Reservation request sent.";
+			String message = "Reservation request sent. ";
+			LOGGER.log( message + sentResult.toString() );
+			return message;
 
 		}
 		catch( Exception ex )
 		{
-
-			LOGGER.log( "Error sending email.  Error: " + ex.getMessage() );
-			return "Reservation request failed to send.";
+			String errorMsg = "Reservation request failed to send.";
+			LOGGER.log( errorMsg + ex.getMessage() );
+			return errorMsg;
 		}
 	}
 
@@ -67,11 +71,13 @@ public class ReservationRequestHandler implements RequestHandler<Reservation, St
 
 	private Content constructEmailBody( Reservation input )
 	{
-		String body = "Reservation Request Details: \r\n  " + " Client Name: "
-				+ input.getName() + "\r\n  " + " Client Email: " + input.getEmail()
-				+ "\r\n  " + " Client Phone: " + input.getPhone() + "\r\n  "
+		String body = "Reservation request received on " + DateTime.now() 
+				+ ".  Here are the details: \r\n  " 
+				+ " Client Name: " + input.getName() + "\r\n  " 
+				+ " Client Email: " + input.getEmail() + "\r\n  " 
+				+ " Client Phone: " + input.getPhone() + "\r\n  "
 				+ " Event Date: " + input.getEventDate() + "\r\n  "
-				+ " Additional Notes: " + input.getMessage() + "\r\n";
+				+ " Additional Info: " + input.getMessage() + "\r\n";
 
 		return new Content( body );
 	}
