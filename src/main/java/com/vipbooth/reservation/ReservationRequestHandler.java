@@ -20,7 +20,7 @@ public class ReservationRequestHandler implements RequestHandler<Reservation, St
 	private static LambdaLogger LOGGER;
 	private static final String FROM = "vipbooth2013@gmail.com";
 	private static final String[] TO = new String[]
-	{ "vipbooth2013@gmail.com" };
+	{ "reservation@thevipbooth.com" };
 	private static final String SUBJECT = "VIP Booth Reservation";
 
 	@Override
